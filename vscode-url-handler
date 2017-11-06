@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Delete the protocol (txmt://open?url=file://), (subl://open?url=file://) or (vscode://open?url=file://)
+request=$(echo $1 | echo -e "$(sed 's/[a-z]*:\/\/open?url=file:\/\///g')")
+
+# Decode URL
+request=$(echo $request | echo -e "$(sed 's/+/ /g; s/%/\\x/g')")
+
+# Replace &line= with :
+request=${request/&line=/:}
+
+# Replace &column= with :
+request=${request/&column=/:}
+
+# Launch Visual Studio Code
+code --goto --reuse-window $request
